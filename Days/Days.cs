@@ -11,26 +11,13 @@ public static partial class Days
     return $"{Environment.NewLine}- Part 1: {part1}{Environment.NewLine}- Part 2: {part2}";
   }
 
+  #region Day1: Solved!
+
   public static string Day1()
   {
-    var testInput = @"199
-200
-208
-210
-200
-207
-240
-269
-260
-263";
+    var input = File.ReadAllLines(Path.Combine(InputBasePath, "Day1.txt")).Select(x => int.Parse(x)).ToArray();
 
-    var input = //testInput.Split(Environment.NewLine).Select(x => int.Parse(x)).ToArray(); //
-    File.ReadAllLines(Path.Combine(InputBasePath, "Day1.txt")).Select(x => int.Parse(x)).ToArray();
-
-    var start = 0;
-    var current = 0;
-    var p1 = 0;
-    var p2 = 0;
+    var start = 0; var current = 0; var p1 = 0; var p2 = 0;
 
     for (var idx = 0; idx < input.Length; idx++)
     {
@@ -52,4 +39,6 @@ public static partial class Days
 
     return OutputResult(p1.ToString(), p2.ToString());
   }
+
+  #endregion
 }
