@@ -2,9 +2,9 @@ using System;
 using System.IO;
 using System.Linq;
 
-public static partial class Days
+public static partial class Days2021
 {
-  private const string InputBasePath = @"Days/Input/";
+  private const string InputBasePath = @"Days/Input/2021";
 
   private static string OutputResult(string part1 = "", string part2 = "")
   {
