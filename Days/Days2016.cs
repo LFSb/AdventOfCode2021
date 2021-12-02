@@ -35,9 +35,9 @@ RURDRUDUUUUULLLUULDULLLDRUULURLDULULRDDLRLLRURULLLLLLRULLURRDLULLUULRRDURRURLUDL
 LDUURLLULRUURRDLDRUULRDRDDDRULDLURDDRURULLRUURRLRRLDRURRDRLUDRUUUULLDRLURDRLRUDDRDDDUURRDRRURULLLDRDRDLDUURLDRUULLDRDDRRDRDUUDLURUDDLLUUDDULDDULRDDUUDDDLRLLLULLDLUDRRLDUUDRUUDUDUURULDRRLRRDLRLURDRURURRDURDURRUDLRURURUUDURURUDRURULLLLLUDRUDUDULRLLLRDRLLRLRLRRDULRUUULURLRRLDRRRDRULRUDUURRRRULDDLRULDRRRDLDRLUDLLUDDRURLURURRLRUDLRLLRDLLDRDDLDUDRDLDDRULDDULUDDLLDURDULLDURRURRULLDRLUURURLLUDDRLRRUUDULRRLLRUDRDUURLDDLLURRDLRUURLLDRDLRUULUDURRDULUULDDLUUUDDLRRDRDUDLRUULDDDLDDRUDDD
 DRRDRRURURUDDDRULRUDLDLDULRLDURURUUURURLURURDDDDRULUDLDDRDDUDULRUUULRDUDULURLRULRDDLDUDLDLULRULDRRLUDLLLLURUDUDLLDLDRLRUUULRDDLUURDRRDLUDUDRULRRDDRRLDUDLLDLURLRDLRUUDLDULURDDUUDDLRDLUURLDLRLRDLLRUDRDUURDDLDDLURRDDRDRURULURRLRLDURLRRUUUDDUUDRDRULRDLURLDDDRURUDRULDURUUUUDULURUDDDDUURULULDRURRDRDURUUURURLLDRDLDLRDDULDRLLDUDUDDLRLLRLRUUDLUDDULRLDLLRLUUDLLLUUDULRDULDLRRLDDDDUDDRRRDDRDDUDRLLLDLLDLLRDLDRDLUDRRRLDDRLUDLRLDRUURUDURDLRDDULRLDUUUDRLLDRLDLLDLDRRRLLULLUDDDLRUDULDDDLDRRLLRDDLDUULRDLRRLRLLRUUULLRDUDLRURRRUULLULLLRRURLRDULLLRLDUUUDDRLRLUURRLUUUDURLRDURRDUDDUDDRDDRUD";
 
-  private const string Input3 = "./Input/Input3.txt";
+  private const string Input3 = "./Input/2016/Input3.txt";
 
-  private const string Input4 = "./Input/Input4.txt";
+  private const string Input4 = "./Input/2016/Input4.txt";
 
   private const string TestInput4 = "aaaaa-bbb-z-y-x-123[abxyz]";
 
@@ -98,16 +98,16 @@ vrdear
 dvrsen
 enarar";
 
-  private const string ActualInput6 = "./Input/Input6.txt";
+  private const string ActualInput6 = "./input/2016/Input6.txt";
 
-  private const string ActualInput7 = "./Input/Input7.txt";
+  private const string ActualInput7 = "./input/2016/Input7.txt";
 
   private static string[] TestInput7 = new[]{"abba[mnop]qrst",
   "abcd[bddb]xyyx",
   "aaaa[qwer]tyui",
   "ioxxoj[asdfgh]zxcvbn"};
 
-  private const string ActualInput8 = "./Input/Input8.txt";
+  private const string ActualInput8 = "./input/2016/Input8.txt";
 
   private static string[] TestInput8 = new[]{
       "rect 3x2",
@@ -125,9 +125,9 @@ enarar";
       "X(8x2)(3x3)ABCY",
     };
 
-  private const string ActualInput9 = "./Input/Input9.txt";
+  private const string ActualInput9 = "./input/2016/Input9.txt";
 
-  private const string ActualInput10 = "./Input/Input10.txt";
+  private const string ActualInput10 = "./input/2016/Input10.txt";
 
   private static string[] TestInput10 = new[]{"value 5 goes to bot 2",
 "bot 2 gives low to bot 1 and high to bot 0",
@@ -136,7 +136,7 @@ enarar";
 "bot 0 gives low to output 2 and high to output 0",
 "value 2 goes to bot 2"};
 
-  private const string ActualInput11 = "./Input/Input11.txt";
+  private const string ActualInput11 = "./input/2016/Input11.txt";
 
   private static string[] TestInput11 = new[]{
 "The first floor contains a hydrogen-compatible microchip and a lithium-compatible microchip.",
@@ -154,11 +154,11 @@ enarar";
 "dec a"
     };
 
-  private const string ActualInput12 = "./Input/Input12.txt";
+  private const string ActualInput12 = "./input/2016/Input12.txt";
 
-  private const string ActualInput15 = "./Input/Input15.txt";
+  private const string ActualInput15 = "./input/2016/Input15.txt";
 
-  private const string ActualInput21 = "./Input/Input21.txt";
+  private const string ActualInput21 = "./input/2016/Input21.txt";
 
   private static string[] TestInput22 = new[]{
       "Filesystem            Size  Used  Avail  Use%",
@@ -173,9 +173,9 @@ enarar";
 "/dev/grid/node-x2-y2    9T    6T     3T   66%"
     };
 
-  private const string ActualInput22 = "./Input/Input22.txt";
+  private const string ActualInput22 = "./input/2016/Input22.txt";
 
-  private const string ActualInput23 = "./Input/Input23.txt";
+  private const string ActualInput23 = "./input/2016/Input23.txt";
 
   private static List<string> TestInput24 = new List<string>{
       "###########",
@@ -184,9 +184,9 @@ enarar";
       "#4.......3#",
       "###########"};
 
-  private const string ActualInput24 = "./Input/Input24.txt";
+  private const string ActualInput24 = "./input/2016/Input24.txt";
 
-  private const string ActualInput25 = "./Input/Input25.txt";
+  private const string ActualInput25 = "./input/2016/Input25.txt";
 
   public static string Day1()
   {
@@ -949,7 +949,7 @@ enarar";
 
   public static string Day20()
   {
-    var lines = File.ReadAllLines(@"./Input/Input20.txt");
+    var lines = File.ReadAllLines(@"./input/2016/Input20.txt");
 
     var pairs = new List<Pair>();
 
