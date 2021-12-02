@@ -42,34 +42,44 @@ public static partial class Days
 
   #endregion
 
-  #region Day2: WIP
+  #region Day2: Solved!
 
   public static string Day2()
   {
-var test = @"forward 5
-down 5
-forward 8
-up 3
-down 8
-forward 2";
-
     var input = File.ReadAllLines(Path.Combine(InputBasePath, "Day2.txt")).ToArray();
 
-    var x = 0; var y = 0;
+    var x1 = 0; var y1 = 0;
+    var x2 = 0; var y2 = 0; var aim = 0;
 
-    foreach(var line in input)
+    foreach (var line in input)
     {
       var split = line.Split(' ');
-
-      switch(split[0])
+      var num = int.Parse(split[1]);
+      switch (split[0])
       {
-        case "forward": x+= int.Parse(split[1]); break;
-        case "down": y+= int.Parse(split[1]); break;
-        case "up": y-= int.Parse(split[1]); break;
+        case "forward":
+          {
+            x1 += num;
+            x2 += num;
+            y2 += aim * num;
+          }
+          break;
+        case "down":
+          {
+            y1 += num;
+            aim += num;
+          }
+          break;
+        case "up":
+          {
+            y1 -= num;
+            aim -= num;
+          }
+          break;
       }
     }
 
-    return OutputResult((x * y).ToString());
+    return OutputResult((x1 * y1).ToString(), (x2 * y2).ToString());
   }
 
   #endregion
