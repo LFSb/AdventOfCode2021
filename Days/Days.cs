@@ -11,7 +11,7 @@ public static partial class Days
     return $"{Environment.NewLine}- Part 1: {part1}{Environment.NewLine}- Part 2: {part2}";
   }
 
-  #region Day1: Solved!
+  #region Day1: Solved! 
 
   public static string Day1()
   {
@@ -38,6 +38,38 @@ public static partial class Days
     }
 
     return OutputResult(p1.ToString(), p2.ToString());
+  }
+
+  #endregion
+
+  #region Day2: WIP
+
+  public static string Day2()
+  {
+var test = @"forward 5
+down 5
+forward 8
+up 3
+down 8
+forward 2";
+
+    var input = File.ReadAllLines(Path.Combine(InputBasePath, "Day2.txt")).ToArray();
+
+    var x = 0; var y = 0;
+
+    foreach(var line in input)
+    {
+      var split = line.Split(' ');
+
+      switch(split[0])
+      {
+        case "forward": x+= int.Parse(split[1]); break;
+        case "down": y+= int.Parse(split[1]); break;
+        case "up": y-= int.Parse(split[1]); break;
+      }
+    }
+
+    return OutputResult((x * y).ToString());
   }
 
   #endregion
