@@ -85,45 +85,58 @@ public static partial class Days2021
 
   #endregion
 
-  #region Day3: WIP
+  #region Day3: Complete
 
   public static string Day3()
   {
-    var testinput = @"00100
-11110
-10110
-10111
-10101
-01111
-00111
-11100
-10000
-11001
-00010
-01010";
-
     var input = File.ReadAllLines(Path.Combine(InputBasePath, "Day3.txt")).Select(x => x.ToCharArray()).ToArray();
-    //testinput.Split(Environment.NewLine).Select(x => x.ToCharArray()).ToArray();
-    
+
     var inputLength = input.First().Length;
     var gamma = new char[inputLength]; var epsilon = new char[inputLength];
 
+    var o2Source = input.ToArray(); var co2Source = input.ToArray();
+
     for (var x = 0; x < inputLength; x++)
     {
-      gamma[x] = ReturnMostSignificantBit(input, x);      
+      gamma[x] = ReturnMostSignificantBit(input, x);
       epsilon[x] = gamma[x] == '1' ? '0' : '1'; //The least sigificant bit is the opposite of the most significant bit. There's probably a quicker way to calculate this, wonder if we need that for pt2...
+
+      //pt2
+      var mostSignificant = ReturnMostSignificantBit(o2Source, x);
+      var leastSignificant = ReturnLeastSignificantBit(co2Source, x);
+
+      if (o2Source.Count() != 1) o2Source = o2Source.Where(line => line[x] == mostSignificant).ToArray();
+      if (co2Source.Count() != 1) co2Source = co2Source.Where(line => line[x] == leastSignificant).ToArray();
     }
 
     var decimalGamma = Convert.ToInt32(new string(gamma), 2);
-    var decimalEpsilon = Convert.ToInt32(new string(epsilon), 2);    
+    var decimalEpsilon = Convert.ToInt32(new string(epsilon), 2);
 
-    return OutputResult((decimalGamma * decimalEpsilon).ToString());
+    var o2Rating = Convert.ToInt32(new string(o2Source.First()), 2);
+    var co2Rating = Convert.ToInt32(new string(co2Source.First()), 2);
+
+    return OutputResult((decimalGamma * decimalEpsilon).ToString(), (o2Rating * co2Rating).ToString());
   }
 
   //if the occurance of 1's is more than half of the list of inputs, we can tell that 1 is the most significant bit. If it's not, 0 is.
   private static char ReturnMostSignificantBit(char[][] input, int idx)
   {
-    return input.Count(x => x[idx] == '1') > input.Length / 2 ? '1' : '0';
+    var count = input.Count(line => line[idx] == '1');
+    var benchmark = Math.Ceiling(input.Length / (decimal)2);
+
+    if (count == benchmark) return '1';
+
+    return (count > benchmark) ? '1' : '0';
+  }
+
+  private static char ReturnLeastSignificantBit(char[][] input, int idx)
+  {
+    var count = input.Count(line => line[idx] == '1');
+    var benchmark = Math.Ceiling(input.Length / (decimal)2);
+
+    if (count == benchmark) return '0';
+
+    return (count > benchmark) ? '0' : '1';
   }
 
   #endregion
