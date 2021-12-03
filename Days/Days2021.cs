@@ -84,4 +84,51 @@ public static partial class Days2021
   }
 
   #endregion
+
+  #region Day3: WIP
+
+  public static string Day3()
+  {
+    var testinput = @"00100
+11110
+10110
+10111
+10101
+01111
+00111
+11100
+10000
+11001
+00010
+01010";
+
+    var input = File.ReadAllLines(Path.Combine(InputBasePath, "Day3.txt")).Select(x => x.ToCharArray()).ToArray();
+    var inputLength = input.First().Length;
+
+    var gamma = new char[inputLength]; var epsilon = new char[inputLength];
+
+    for (var x = 0; x < inputLength; x++)
+    {
+      var trueAmount = 0;
+      
+      //We're first traversing the 2-dimensional array vertically, so we can determine the most and least common bit before moving to the next one.
+      for (var y = 0; y < input.Length; y++)
+      {
+        if (input[y][x] == '1')
+        {
+          trueAmount++;
+        }
+      }
+
+      gamma[x] = trueAmount > input.Length / 2 ? '1' : '0';
+      epsilon[x] = gamma[x] == '1' ? '0' : '1';
+    }
+
+    var decimalGamma = Convert.ToInt32(new string(gamma), 2);
+    var decimalEpsilon = Convert.ToInt32(new string(epsilon), 2);
+
+    return OutputResult((decimalGamma * decimalEpsilon).ToString());
+  }
+
+  #endregion
 }
