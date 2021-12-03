@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Diagnostics;
 
 namespace AdventOfCode2021
 {
@@ -6,7 +7,11 @@ namespace AdventOfCode2021
   {
     static void Main(string[] args)
     {
+      var sw = new Stopwatch();
+      sw.Start();
       Console.WriteLine(Days2021.Day3());
+      sw.Stop();
+      System.Console.WriteLine($"Took: {sw.ElapsedMilliseconds} ms...");
     }
   }
 }

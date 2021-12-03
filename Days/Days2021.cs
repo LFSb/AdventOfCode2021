@@ -103,7 +103,9 @@ public static partial class Days2021
 01010";
 
     var input = File.ReadAllLines(Path.Combine(InputBasePath, "Day3.txt")).Select(x => x.ToCharArray()).ToArray();
+    
     var inputLength = input.First().Length;
+    var mostSignificant = input.Length / 2;
 
     var gamma = new char[inputLength]; var epsilon = new char[inputLength];
 
@@ -112,16 +114,14 @@ public static partial class Days2021
       var trueAmount = 0;
       
       //We're first traversing the 2-dimensional array vertically, so we can determine the most and least common bit before moving to the next one.
+
       for (var y = 0; y < input.Length; y++)
       {
-        if (input[y][x] == '1')
-        {
-          trueAmount++;
-        }
+        if (input[y][x] == '1') trueAmount++;
       }
 
-      gamma[x] = trueAmount > input.Length / 2 ? '1' : '0';
-      epsilon[x] = gamma[x] == '1' ? '0' : '1';
+      gamma[x] = trueAmount > mostSignificant ? '1' : '0'; //if the occurance of 1's is more than half of the list of inputs, we can tell that 1 is the most significant bit. If it's not, 0 is.
+      epsilon[x] = gamma[x] == '1' ? '0' : '1'; //The least sigificant bit is the opposite of the most significant bit. There's probably a quicker way to calculate this, wonder if we need that for pt2...
     }
 
     var decimalGamma = Convert.ToInt32(new string(gamma), 2);
