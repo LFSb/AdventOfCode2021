@@ -8,9 +8,11 @@ namespace AdventOfCode2021
     static void Main(string[] args)
     {
       var sw = new Stopwatch();
+      
       sw.Start();
-      Console.WriteLine(Days2021.Day3());
+      Console.WriteLine(Days2021.Day4());
       sw.Stop();
+
       System.Console.WriteLine($"Took: {sw.ElapsedMilliseconds} ms...");
     }
   }

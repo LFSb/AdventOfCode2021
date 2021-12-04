@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 
@@ -23,7 +24,8 @@ public static partial class Days2021
     {
       current = input[idx];
 
-      if (current > start && start > 0) p1++;
+      if (current > start && start > 0)
+        p1++;
 
       if (idx < input.Length - 3)
       {
@@ -85,7 +87,7 @@ public static partial class Days2021
 
   #endregion
 
-  #region Day3: Complete
+  #region Day3: Solved!
 
   public static string Day3()
   {
@@ -102,11 +104,17 @@ public static partial class Days2021
       epsilon[x] = gamma[x] == '1' ? '0' : '1'; //The least sigificant bit is the opposite of the most significant bit. There's probably a quicker way to calculate this, wonder if we need that for pt2...
 
       //pt2
-      var mostSignificant = ReturnMostSignificantBit(o2Source, x);
-      var leastSignificant = ReturnLeastSignificantBit(co2Source, x);
+      if (o2Source.Count() > 1)
+      {
+        var mostSignificant = ReturnMostSignificantBit(o2Source, x);
+        o2Source = o2Source.Where(line => line[x] == mostSignificant).ToArray();
+      }
 
-      if (o2Source.Count() != 1) o2Source = o2Source.Where(line => line[x] == mostSignificant).ToArray();
-      if (co2Source.Count() != 1) co2Source = co2Source.Where(line => line[x] == leastSignificant).ToArray();
+      if (co2Source.Count() > 1)
+      {
+        var leastSignificant = ReturnLeastSignificantBit(co2Source, x);
+        co2Source = co2Source.Where(line => line[x] == leastSignificant).ToArray();
+      }
     }
 
     var decimalGamma = Convert.ToInt32(new string(gamma), 2);
@@ -139,5 +147,136 @@ public static partial class Days2021
     return (count > benchmark) ? '0' : '1';
   }
 
+  #endregion
+
+  #region Day4: WIP
+  public static string Day4()
+  {
+
+    var testinput = @"7,4,9,5,11,17,23,2,0,14,21,24,10,16,13,6,15,25,12,22,18,20,8,19,3,26,1
+
+22 13 17 11  0
+ 8  2 23  4 24
+21  9 14 16  7
+ 6 10  3 18  5
+ 1 12 20 15 19
+
+ 3 15  0  2 22
+ 9 18 13 17  5
+19  8  7 25 23
+20 11 10 24  4
+14 21 16 12  6
+
+14 21 17 24  4
+10 16 15  9 19
+18  8 23 26 20
+22 11 13  6  5
+ 2  0 12  3  7";
+
+    var input = testinput.Split(Environment.NewLine).ToArray();
+
+    var bingo = new BingoDay4(input);
+
+    bingo.Part1();
+
+    return OutputResult();
+  }
+
+  public class BingoDay4
+  {
+    public int[] BingoNumbers { get; private set; }
+
+    public List<BingoBoard> BingoBoards { get; private set; }
+
+    public int Part1()
+    {
+      foreach (var num in BingoNumbers)
+      {
+        foreach (var board in BingoBoards)
+        {
+          var target = board.Board.FirstOrDefault(x => x.Number == num);
+          if (target != null)
+          {
+            System.Console.WriteLine($"Board {board.BoardNumber} has {num}!");
+            target.Crossed = true;
+          }
+
+          //TODO: After each number was drawn, we should check all boards to see if they have 5 in a row, either on the X coordinate or on the Y coordinate.
+        }
+      }
+
+      throw new NotImplementedException();
+    }
+
+    public BingoDay4(string[] input)
+    {
+      BingoBoards = new List<BingoBoard>();
+
+      BingoNumbers = input[0].Split(',').Select(x => int.Parse(x)).ToArray();
+
+      var boards = new Queue<string>(input.Skip(1));
+
+      var currentBoardLines = new List<string>();
+      var number = 1;
+
+      while (boards.Any())
+      {
+        var line = boards.Dequeue();
+
+        if (line == string.Empty) //Either we've encountered the start of a new board, or the end of the current board.
+        {
+          if (currentBoardLines.Any())
+          {
+            BingoBoards.Add(new BingoBoard(currentBoardLines.ToArray(), number++));
+            currentBoardLines = new List<string>();
+          }
+        }
+        else
+        {
+          currentBoardLines.Add(line);
+        }
+      }
+
+      BingoBoards.Add(new BingoBoard(currentBoardLines.ToArray(), number++));
+    }
+  }
+
+  public class BingoBoard
+  {
+    public List<BingoCoordinate> Board { get; set; }
+
+    public int BoardNumber { get; set; }
+
+    public BingoBoard(string[] input, int boardNumber)
+    {
+      Board = new List<BingoCoordinate>();
+      BoardNumber = boardNumber;
+
+      for (var y = 0; y < input.Length; y++)
+      {
+        var split = input[y].Split(' ', options: StringSplitOptions.RemoveEmptyEntries);
+
+        for (var x = 0; x < split.Length; x++)
+        {
+          Board.Add(new BingoCoordinate(y, x, int.Parse(split[x])));
+        }
+      }
+    }
+  }
+
+  public class BingoCoordinate
+  {
+    public int Y { get; private set; }
+    public int X { get; private set; }
+    public int Number { get; private set; }
+    public bool Crossed { get; set; }
+
+    public BingoCoordinate(int y, int x, int number)
+    {
+      Y = y;
+      X = x;
+      Number = number;
+    }
+  }
   #endregion
 }
