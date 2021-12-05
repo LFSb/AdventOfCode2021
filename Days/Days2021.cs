@@ -173,8 +173,8 @@ public static partial class Days2021
 22 11 13  6  5
  2  0 12  3  7";
 
-    var input = testinput.Split(Environment.NewLine).ToArray();
-    //File.ReadAllLines(Path.Combine(InputBasePath, "Day4.txt")).ToArray(); 
+    var input = //testinput.Split(Environment.NewLine).ToArray();
+    File.ReadAllLines(Path.Combine(InputBasePath, "Day4.txt")).ToArray();
 
     var bingo = new BingoDay4(input);
 
@@ -189,12 +189,59 @@ public static partial class Days2021
 
     public List<BingoBoard> BingoBoards { get; private set; }
 
+    public void Visualize(string message = null)
+    {
+      Console.Clear();
+
+      var consolewidth = Console.WindowWidth;
+      int boardWidth = 18;
+      int boardHeight = 7;
+
+      int boardsPerRow = 18;
+
+      foreach (var board in BingoBoards)
+      {
+        var bingoBoard = board.Board;
+        var boardIndex = BingoBoards.IndexOf(board);
+        var row = boardIndex / boardsPerRow;
+
+        for (var y = 0; y < bingoBoard.Max(c => c.Y) + 1; y++)
+        {
+          Console.SetCursorPosition((int)boardWidth * (boardIndex % boardsPerRow), y + (row * boardHeight));
+
+          for (var x = 0; x < bingoBoard.Max(c => c.X) + 1; x++)
+          {
+            var coord = bingoBoard.First(c => c.X == x && c.Y == y);
+
+            if (coord.Crossed && !board.Solved) Console.ForegroundColor = ConsoleColor.Red;
+            if (board.Solved) Console.ForegroundColor = ConsoleColor.Blue;
+
+            Console.Write(coord.Number.ToString().PadLeft(2, ' '));
+
+            Console.ForegroundColor = ConsoleColor.White;
+
+            Console.Write(' ');
+          }
+
+          Console.WriteLine();
+        }
+      }
+
+      System.Console.WriteLine();
+      System.Console.WriteLine(message);
+
+      System.Threading.Thread.Sleep(500);
+      Console.Clear();
+    }
+
     public void PlayBingo(out int p1, out int p2)
     {
       p1 = 0; p2 = 0;
 
       foreach (var num in BingoNumbers)
       {
+        Visualize($"{num} was pulled.");
+
         foreach (var board in BingoBoards)
         {
           var target = board.Board.FirstOrDefault(x => x.Number == num);
@@ -222,6 +269,8 @@ public static partial class Days2021
 
           if (p1 != 0 && p2 != 0) return;
         }
+
+        // Visualize();
       }
     }
 
@@ -287,7 +336,7 @@ public static partial class Days2021
     {
       var sum = 0;
 
-      for (var idx = 0; idx < Board.Max(coord => coord.X); idx++)
+      for (var idx = 0; idx < Board.Max(coord => coord.X) + 1; idx++)
       {
         var allVerticals = Board.Where(coord => coord.X == idx);
         var allHorizontals = Board.Where(coord => coord.Y == idx);
