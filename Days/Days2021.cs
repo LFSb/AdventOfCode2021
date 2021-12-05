@@ -173,13 +173,11 @@ public static partial class Days2021
 22 11 13  6  5
  2  0 12  3  7";
 
-    var input = testinput.Split(Environment.NewLine).ToArray();
+    var input = File.ReadAllLines(Path.Combine(InputBasePath, "Day4.txt")).ToArray();
 
     var bingo = new BingoDay4(input);
 
-    bingo.Part1();
-
-    return OutputResult();
+    return OutputResult(bingo.Part1().ToString());
   }
 
   public class BingoDay4
@@ -195,17 +193,25 @@ public static partial class Days2021
         foreach (var board in BingoBoards)
         {
           var target = board.Board.FirstOrDefault(x => x.Number == num);
+
           if (target != null)
           {
-            System.Console.WriteLine($"Board {board.BoardNumber} has {num}!");
+            //System.Console.WriteLine($"Board {board.BoardNumber} has {num}!");
             target.Crossed = true;
           }
 
-          //TODO: After each number was drawn, we should check all boards to see if they have 5 in a row, either on the X coordinate or on the Y coordinate.
+          var bingo = board.Bingo();
+
+          if (bingo != 0)
+          {
+            System.Console.WriteLine($"We have a bingo! At {num} we have the sum {bingo}.");
+
+            return bingo * num;
+          }
         }
       }
 
-      throw new NotImplementedException();
+      return 0;
     }
 
     public BingoDay4(string[] input)
@@ -261,6 +267,25 @@ public static partial class Days2021
           Board.Add(new BingoCoordinate(y, x, int.Parse(split[x])));
         }
       }
+    }
+
+    //A board has a bingo if there's N X or Y coordinates in a row that are Crossed.
+    public int Bingo()
+    {
+      var sum = 0;
+
+      for (var idx = 0; idx < Board.Max(coord => coord.X); idx++)
+      {
+        var allVerticals = Board.Where(coord => coord.X == idx);
+        var allHorizontals = Board.Where(coord => coord.Y == idx);
+
+        if (allVerticals.All(coord => coord.Crossed) || allHorizontals.All(coord => coord.Crossed))
+        {
+          sum = Board.Where(c => !c.Crossed).Sum(coord => coord.Number);
+        }
+      }
+
+      return sum;
     }
   }
 
