@@ -173,11 +173,14 @@ public static partial class Days2021
 22 11 13  6  5
  2  0 12  3  7";
 
-    var input = File.ReadAllLines(Path.Combine(InputBasePath, "Day4.txt")).ToArray();
+    var input = testinput.Split(Environment.NewLine).ToArray();
+    //File.ReadAllLines(Path.Combine(InputBasePath, "Day4.txt")).ToArray(); 
 
     var bingo = new BingoDay4(input);
 
-    return OutputResult(bingo.Part1().ToString());
+    bingo.PlayBingo(out var p1, out var p2);
+
+    return OutputResult(p1.ToString(), p2.ToString());
   }
 
   public class BingoDay4
@@ -186,8 +189,10 @@ public static partial class Days2021
 
     public List<BingoBoard> BingoBoards { get; private set; }
 
-    public int Part1()
+    public void PlayBingo(out int p1, out int p2)
     {
+      p1 = 0; p2 = 0;
+
       foreach (var num in BingoNumbers)
       {
         foreach (var board in BingoBoards)
@@ -196,7 +201,6 @@ public static partial class Days2021
 
           if (target != null)
           {
-            //System.Console.WriteLine($"Board {board.BoardNumber} has {num}!");
             target.Crossed = true;
           }
 
@@ -204,14 +208,21 @@ public static partial class Days2021
 
           if (bingo != 0)
           {
-            System.Console.WriteLine($"We have a bingo! At {num} we have the sum {bingo}.");
+            if (p1 == 0) p1 = bingo * num;
 
-            return bingo * num;
+            board.Solved = true;
           }
+
+          if (BingoBoards.All(x => x.Solved))
+          {
+            System.Console.WriteLine($"Board #{board.BoardNumber} was solved last with num {num} being pulled.");
+
+            p2 = board.Board.Where(c => !c.Crossed).Sum(c => c.Number) * num;
+          }
+
+          if (p1 != 0 && p2 != 0) return;
         }
       }
-
-      return 0;
     }
 
     public BingoDay4(string[] input)
@@ -253,6 +264,8 @@ public static partial class Days2021
 
     public int BoardNumber { get; set; }
 
+    public bool Solved { get; set; }
+
     public BingoBoard(string[] input, int boardNumber)
     {
       Board = new List<BingoCoordinate>();
@@ -282,6 +295,7 @@ public static partial class Days2021
         if (allVerticals.All(coord => coord.Crossed) || allHorizontals.All(coord => coord.Crossed))
         {
           sum = Board.Where(c => !c.Crossed).Sum(coord => coord.Number);
+          Solved = true;
         }
       }
 
