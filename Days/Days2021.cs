@@ -361,9 +361,12 @@ public static partial class Days2021
     var input = File.ReadAllLines(Path.Combine(InputBasePath, "Day5.txt")).ToArray();
 
     var grid = new Day5Grid(999, input);
-    grid.ProcessInstructions();
+    var p1 = grid.ProcessInstructions(false);
+    
+    var p2grid = new Day5Grid(999, input);
+    var p2 = p2grid.ProcessInstructions(true);
 
-    return OutputResult(grid.Part1());
+    return OutputResult(p1, p2);
   }
 
   public class Day5Grid
@@ -381,11 +384,6 @@ public static partial class Days2021
       Instructions = new Queue<string>(instructions);
     }
 
-    public string Part1()
-    {
-      return Grid.Sum(x => x.Count(y => y > 1)).ToString();
-    }
-
     public void Visualize()
     {
       for (var x = 0; x < Grid.Length; x++)
@@ -400,11 +398,11 @@ public static partial class Days2021
       Console.ReadLine();
     }
 
-    public void ProcessInstructions(bool visualize = false)
+    public string ProcessInstructions(bool part2, bool visualize = false)
     {
       while (Instructions.Any())
       {
-        ProcessPartOneInstruction(Instructions.Dequeue());
+        ProcessInstruction(Instructions.Dequeue(), part2);
 
         if (visualize)
         {
@@ -413,9 +411,11 @@ public static partial class Days2021
           Console.ReadLine();
         }
       }
+
+      return Grid.Sum(x => x.Count(y => y > 1)).ToString();
     }
 
-    private void ProcessPartOneInstruction(string instruction)
+    private void ProcessInstruction(string instruction, bool part2)
     {
       var split = instruction.Split("->", StringSplitOptions.TrimEntries);
 
@@ -426,16 +426,14 @@ public static partial class Days2021
       var x1 = int.Parse(source[0]); var y1 = int.Parse(source[1]);
       var x2 = int.Parse(target[0]); var y2 = int.Parse(target[1]);
 
-      if (x1 == x2 || y1 == y2) //Only consider instructions where we're going vertical, or horizontal.
+      if (x1 == x2 || y1 == y2) //For part 1, only consider instructions where we're going vertical, or horizontal.
       {
+        var orientation = y1 == y2 ? true : false; //orientation being true means we're going horizontal, otherwise we're moving vertical.
+
         while (true)
         {
-          var orientation = y1 == y2 ? true : false; //orientation being true means we're going horizontal, otherwise we're moving vertical.
-
           //first: we're going to mark the current spot (x1, y1)
           Grid[x1][y1]++;
-
-          // System.Console.WriteLine($"Marked {x1}:{y1}. It's now {Grid[x1][y1]}");
 
           //Then, we should increment (or decrement) x1 or y1 (depending on orientation).
 
@@ -451,7 +449,66 @@ public static partial class Days2021
           }
         }
       }
+      else if(part2)
+      {
+        int orientation;
 
+        if (x1 > x2 && y1 > y2) //if both source points are greater than the targets, we're moving diagonally to bottom left. Example: 3,3 -> 1,1. This will cover 3,3, 2,2 and then finally 1,1.
+        {
+          orientation = 3;
+        }
+        else if (x1 < x2 && y1 < y2) //if both source points are smaller than the targets, we're moving diagonally to top right. Example, 1,1 -> 3,3. This will cover 1,1, 2,2 and then finally 3,3.
+        {
+          orientation = 1;
+        }
+        else if (x1 > x2 && y1 < y2) //If x1 is greater than x2, but y1 is smaller than y2, we're moving diagonally to top left. Example, 3,1 -> 1,3. This will cover 3,1, 2,2 and then 1,3.
+        {
+          orientation = 4;
+        }
+        else if (x1 < x2 && y1 > y2) //if x1 is smaller than x2, but y1 is greather than y2, we're moving diagonally to bottom right. Example, 1,3 -> 3,1. This will cover 1,3, 2,2 and then 3,1.
+        {
+          orientation = 2;
+        }
+        else
+        {
+          orientation = -1;
+        }
+
+        while (true) //Here, we should traverse diagonally. 1,1 -> 3,3 covers points 1,1, 2,2 and 3,3. Basically, we should do the same in the case of vertical/horizontal movement, only moving in both directions at the same time.
+        {
+          Grid[x1][y1]++;
+
+          if (x1 == x2 && y1 == y2) break;
+
+          switch (orientation)
+          {
+            case 1:
+              {
+                x1++; y1++;
+              }
+              break;
+            case 2:
+              {
+                x1++; y1--;
+              }
+              break;
+            case 3:
+              {
+                x1--; y1--;
+              }
+              break;
+            case 4:
+              {
+                x1--; y1++;
+              }
+              break;
+            default:
+              {
+                throw new Exception("Nope.");
+              }
+          }
+        }
+      }
     }
   }
   #endregion
