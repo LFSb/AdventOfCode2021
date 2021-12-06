@@ -179,6 +179,7 @@ public static partial class Days2021
     var bingo = new BingoDay4(input);
 
     bingo.PlayBingo(out var p1, out var p2);
+    Console.Clear();
 
     return OutputResult(p1.ToString(), p2.ToString());
   }
@@ -189,9 +190,9 @@ public static partial class Days2021
 
     public List<BingoBoard> BingoBoards { get; private set; }
 
-    public void Visualize(string message = null)
+    public void Visualize(bool clear,string message = null)
     {
-      Console.Clear();
+      if(clear) Console.Clear();
 
       var consolewidth = Console.WindowWidth;
       int boardWidth = 18;
@@ -214,7 +215,7 @@ public static partial class Days2021
             var coord = bingoBoard.First(c => c.X == x && c.Y == y);
 
             if (coord.Crossed && !board.Solved) Console.ForegroundColor = ConsoleColor.Red;
-            if (board.Solved) Console.ForegroundColor = ConsoleColor.Blue;
+            if (board.Solved) Console.ForegroundColor = ConsoleColor.Green;
 
             Console.Write(coord.Number.ToString().PadLeft(2, ' '));
 
@@ -230,17 +231,18 @@ public static partial class Days2021
       System.Console.WriteLine();
       System.Console.WriteLine(message);
 
-      System.Threading.Thread.Sleep(500);
-      Console.Clear();
+      System.Threading.Thread.Sleep(10);
     }
 
     public void PlayBingo(out int p1, out int p2)
     {
       p1 = 0; p2 = 0;
+      var clear = true;
 
       foreach (var num in BingoNumbers)
       {
-        Visualize($"{num} was pulled.");
+        Visualize(clear, $"{num} was pulled.");
+        clear = false;
 
         foreach (var board in BingoBoards)
         {
