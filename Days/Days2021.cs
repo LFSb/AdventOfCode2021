@@ -149,35 +149,14 @@ public static partial class Days2021
 
   #endregion
 
-  #region Day4: WIP
+  #region Day4: Solved!
   public static string Day4()
   {
-
-    var testinput = @"7,4,9,5,11,17,23,2,0,14,21,24,10,16,13,6,15,25,12,22,18,20,8,19,3,26,1
-
-22 13 17 11  0
- 8  2 23  4 24
-21  9 14 16  7
- 6 10  3 18  5
- 1 12 20 15 19
-
- 3 15  0  2 22
- 9 18 13 17  5
-19  8  7 25 23
-20 11 10 24  4
-14 21 16 12  6
-
-14 21 17 24  4
-10 16 15  9 19
-18  8 23 26 20
-22 11 13  6  5
- 2  0 12  3  7";
-
-    var input = //testinput.Split(Environment.NewLine).ToArray();
-    File.ReadAllLines(Path.Combine(InputBasePath, "Day4.txt")).ToArray();
+    var input = File.ReadAllLines(Path.Combine(InputBasePath, "Day4.txt")).ToArray();
 
     var bingo = new BingoDay4(input);
 
+    Console.Clear();
     bingo.PlayBingo(out var p1, out var p2);
     Console.Clear();
 
@@ -190,10 +169,8 @@ public static partial class Days2021
 
     public List<BingoBoard> BingoBoards { get; private set; }
 
-    public void Visualize(bool clear,string message = null)
+    public void Visualize(string message = null)
     {
-      if(clear) Console.Clear();
-
       var consolewidth = Console.WindowWidth;
       int boardWidth = 18;
       int boardHeight = 7;
@@ -231,18 +208,16 @@ public static partial class Days2021
       System.Console.WriteLine();
       System.Console.WriteLine(message);
 
-      System.Threading.Thread.Sleep(10);
+      // System.Threading.Thread.Sleep(10);
     }
 
     public void PlayBingo(out int p1, out int p2)
     {
       p1 = 0; p2 = 0;
-      var clear = true;
 
       foreach (var num in BingoNumbers)
       {
-        Visualize(clear, $"{num} was pulled.");
-        clear = false;
+        Visualize($"{num} was pulled.");
 
         foreach (var board in BingoBoards)
         {
@@ -271,8 +246,6 @@ public static partial class Days2021
 
           if (p1 != 0 && p2 != 0) return;
         }
-
-        // Visualize();
       }
     }
 
@@ -366,6 +339,119 @@ public static partial class Days2021
       Y = y;
       X = x;
       Number = number;
+    }
+  }
+  #endregion
+
+  #region Day5: WIP
+
+  public static string Day5()
+  {
+    var testinput = @"0,9 -> 5,9
+8,0 -> 0,8
+9,4 -> 3,4
+2,2 -> 2,1
+7,0 -> 7,4
+6,4 -> 2,0
+0,9 -> 2,9
+3,4 -> 1,4
+0,0 -> 8,8
+5,5 -> 8,2".Split(Environment.NewLine).ToArray();
+
+    var input = File.ReadAllLines(Path.Combine(InputBasePath, "Day5.txt")).ToArray();
+
+    var grid = new Day5Grid(999, input);
+    grid.ProcessInstructions();
+
+    return OutputResult(grid.Part1());
+  }
+
+  public class Day5Grid
+  {
+    public int[][] Grid { get; private set; }
+
+    public Queue<string> Instructions { get; private set; }
+
+    public Day5Grid(int gridSize, string[] instructions)
+    {
+      Grid = new int[gridSize][];
+
+      for (var x = 0; x < gridSize; x++) Grid[x] = new int[gridSize];
+
+      Instructions = new Queue<string>(instructions);
+    }
+
+    public string Part1()
+    {
+      return Grid.Sum(x => x.Count(y => y > 1)).ToString();
+    }
+
+    public void Visualize()
+    {
+      for (var x = 0; x < Grid.Length; x++)
+      {
+        for (var y = 0; y < Grid[x].Length; y++)
+        {
+          Console.SetCursorPosition(x, y);
+          var val = Grid[x][y];
+          Console.Write(val == 0 ? "." : val.ToString());
+        }
+      }
+      Console.ReadLine();
+    }
+
+    public void ProcessInstructions(bool visualize = false)
+    {
+      while (Instructions.Any())
+      {
+        ProcessPartOneInstruction(Instructions.Dequeue());
+
+        if (visualize)
+        {
+          Console.Clear();
+          Visualize();
+          Console.ReadLine();
+        }
+      }
+    }
+
+    private void ProcessPartOneInstruction(string instruction)
+    {
+      var split = instruction.Split("->", StringSplitOptions.TrimEntries);
+
+      var source = split[0].Split(',');
+
+      var target = split[1].Split(',');
+
+      var x1 = int.Parse(source[0]); var y1 = int.Parse(source[1]);
+      var x2 = int.Parse(target[0]); var y2 = int.Parse(target[1]);
+
+      if (x1 == x2 || y1 == y2) //Only consider instructions where we're going vertical, or horizontal.
+      {
+        while (true)
+        {
+          var orientation = y1 == y2 ? true : false; //orientation being true means we're going horizontal, otherwise we're moving vertical.
+
+          //first: we're going to mark the current spot (x1, y1)
+          Grid[x1][y1]++;
+
+          // System.Console.WriteLine($"Marked {x1}:{y1}. It's now {Grid[x1][y1]}");
+
+          //Then, we should increment (or decrement) x1 or y1 (depending on orientation).
+
+          if (x1 == x2 && y1 == y2) break;
+
+          if (orientation)
+          {
+            x1 += x1 > x2 ? -1 : 1;
+          }
+          else
+          {
+            y1 += y1 > y2 ? -1 : 1;
+          }
+        }
+      }
+
     }
   }
   #endregion
