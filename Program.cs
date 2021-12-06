@@ -10,7 +10,7 @@ namespace AdventOfCode2021
       var sw = new Stopwatch();
       
       sw.Start();
-      Console.WriteLine(Days2021.Day5());
+      Console.WriteLine(Days2021.Day6());
       sw.Stop();
 
       System.Console.WriteLine($"Took: {sw.ElapsedMilliseconds} ms...");

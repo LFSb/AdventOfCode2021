@@ -343,7 +343,7 @@ public static partial class Days2021
   }
   #endregion
 
-  #region Day5: WIP
+  #region Day5: Solved!
 
   public static string Day5()
   {
@@ -358,12 +358,13 @@ public static partial class Days2021
 0,0 -> 8,8
 5,5 -> 8,2".Split(Environment.NewLine).ToArray();
 
+    var gridSize = 999;
     var input = File.ReadAllLines(Path.Combine(InputBasePath, "Day5.txt")).ToArray();
 
-    var grid = new Day5Grid(999, input);
+    var grid = new Day5Grid(gridSize, input);
     var p1 = grid.ProcessInstructions(false);
-    
-    var p2grid = new Day5Grid(999, input);
+
+    var p2grid = new Day5Grid(gridSize, input);
     var p2 = p2grid.ProcessInstructions(true);
 
     return OutputResult(p1, p2);
@@ -400,19 +401,47 @@ public static partial class Days2021
 
     public string ProcessInstructions(bool part2, bool visualize = false)
     {
+      if (visualize) Console.Clear();
+
       while (Instructions.Any())
       {
         ProcessInstruction(Instructions.Dequeue(), part2);
 
         if (visualize)
         {
-          Console.Clear();
           Visualize();
-          Console.ReadLine();
         }
       }
 
       return Grid.Sum(x => x.Count(y => y > 1)).ToString();
+    }
+
+    private int DetermineOrientation(int x1, int x2, int y1, int y2)
+    {
+      int orientation;
+
+      if (x1 > x2 && y1 > y2) //if both source points are greater than the targets, we're moving diagonally to bottom left. Example: 3,3 -> 1,1. This will cover 3,3, 2,2 and then finally 1,1.
+      {
+        orientation = 3;
+      }
+      else if (x1 < x2 && y1 < y2) //if both source points are smaller than the targets, we're moving diagonally to top right. Example, 1,1 -> 3,3. This will cover 1,1, 2,2 and then finally 3,3.
+      {
+        orientation = 1;
+      }
+      else if (x1 > x2 && y1 < y2) //If x1 is greater than x2, but y1 is smaller than y2, we're moving diagonally to top left. Example, 3,1 -> 1,3. This will cover 3,1, 2,2 and then 1,3.
+      {
+        orientation = 4;
+      }
+      else if (x1 < x2 && y1 > y2) //if x1 is smaller than x2, but y1 is greather than y2, we're moving diagonally to bottom right. Example, 1,3 -> 3,1. This will cover 1,3, 2,2 and then 3,1.
+      {
+        orientation = 2;
+      }
+      else
+      {
+        orientation = -1; //If we turn up here, we've obviously fucked up.
+      }
+
+      return orientation;
     }
 
     private void ProcessInstruction(string instruction, bool part2)
@@ -449,30 +478,9 @@ public static partial class Days2021
           }
         }
       }
-      else if(part2)
+      else if (part2)
       {
-        int orientation;
-
-        if (x1 > x2 && y1 > y2) //if both source points are greater than the targets, we're moving diagonally to bottom left. Example: 3,3 -> 1,1. This will cover 3,3, 2,2 and then finally 1,1.
-        {
-          orientation = 3;
-        }
-        else if (x1 < x2 && y1 < y2) //if both source points are smaller than the targets, we're moving diagonally to top right. Example, 1,1 -> 3,3. This will cover 1,1, 2,2 and then finally 3,3.
-        {
-          orientation = 1;
-        }
-        else if (x1 > x2 && y1 < y2) //If x1 is greater than x2, but y1 is smaller than y2, we're moving diagonally to top left. Example, 3,1 -> 1,3. This will cover 3,1, 2,2 and then 1,3.
-        {
-          orientation = 4;
-        }
-        else if (x1 < x2 && y1 > y2) //if x1 is smaller than x2, but y1 is greather than y2, we're moving diagonally to bottom right. Example, 1,3 -> 3,1. This will cover 1,3, 2,2 and then 3,1.
-        {
-          orientation = 2;
-        }
-        else
-        {
-          orientation = -1;
-        }
+        var orientation = DetermineOrientation(x1, x2, y1, y2);
 
         while (true) //Here, we should traverse diagonally. 1,1 -> 3,3 covers points 1,1, 2,2 and 3,3. Basically, we should do the same in the case of vertical/horizontal movement, only moving in both directions at the same time.
         {
@@ -511,5 +519,45 @@ public static partial class Days2021
       }
     }
   }
+  #endregion
+
+  #region Day6: Solved!
+
+  public static string Day6()
+  {
+    var input = File.ReadAllText(Path.Combine(InputBasePath, "Day6.txt")).Split(',').Select(x => int.Parse(x)).ToArray();
+
+    var p1 = CalculateLanternFish(input, 80);
+
+    var p2 = CalculateLanternFish(input, 256);
+
+    return OutputResult(p1.ToString(), p2.ToString());
+  }
+
+  private static long CalculateLanternFish(int[] initialState, int target)
+  {
+    var registers = new long[9];
+
+    foreach (var item in initialState)
+    {
+      registers[item]++;
+    }
+
+    for (var day = 0; day < target; day++)
+    {
+      long tmp = registers[0];
+
+      for (var idx = 1; idx < registers.Length; idx++)
+      {
+        registers[idx - 1] = registers[idx];
+      }
+
+      registers[6] += tmp;
+      registers[8] = tmp;
+    }
+
+    return registers.Sum(x => x);
+  }
+
   #endregion
 }
