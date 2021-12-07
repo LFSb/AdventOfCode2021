@@ -561,21 +561,34 @@ public static partial class Days2021
 
   #endregion
 
-  #region Day7: wip
+  #region Day7: Solved!
   public static string Day7()
   {
-    var testinput = "16,1,2,0,4,2,7,1,2,14".Split(',');
-    
     var input = File.ReadAllText(Path.Combine(InputBasePath, "Day7.txt")).Split(',').Select(x => int.Parse(x));
 
     var p1 = int.MaxValue;
+    var p2 = int.MaxValue;
 
-    for(var i = 0; i < input.Max(); i++)
+    for (var i = 0; i < input.Max(); i++)
     {
       p1 = Math.Min(p1, input.Sum(x => Math.Abs(x - i)));
+
+      p2 = Math.Min(p2, input.Sum(x => CalculateSteps(Math.Abs(x - i))));
     }
 
-    return OutputResult(p1.ToString());
+    return OutputResult(p1.ToString(), p2.ToString());
+  }
+
+  private static int CalculateSteps(int steps)
+  {
+    var retVal = 0;
+
+    for (var idx = 1; idx <= steps; idx++)
+    {
+      retVal += idx;
+    }
+
+    return retVal;
   }
   #endregion
 }
