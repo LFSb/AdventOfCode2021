@@ -560,4 +560,22 @@ public static partial class Days2021
   }
 
   #endregion
+
+  #region Day7: wip
+  public static string Day7()
+  {
+    var testinput = "16,1,2,0,4,2,7,1,2,14".Split(',');
+    
+    var input = File.ReadAllText(Path.Combine(InputBasePath, "Day7.txt")).Split(',').Select(x => int.Parse(x));
+
+    var p1 = int.MaxValue;
+
+    for(var i = 0; i < input.Max(); i++)
+    {
+      p1 = Math.Min(p1, input.Sum(x => Math.Abs(x - i)));
+    }
+
+    return OutputResult(p1.ToString());
+  }
+  #endregion
 }
